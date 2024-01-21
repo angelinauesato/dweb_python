@@ -10,17 +10,18 @@ def execute_shell_script():
 	stdin, stdout, stderr = ssh.exec_command('./script.sh')
 
 	output = stdout.read().decode('utf-8')
+	error = stderr.read().decode('utf-8')
 
 	ssh.close()
-	return output
+	return output, error
 
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-	output = execute_shell_script()
-	return f"Hello Rafa!<pre> {output}</pre>"
+	output, err = execute_shell_script()
+	return f"Hello Rafa!<pre> {output}</pre> <br />Errors:<br /> <pre> {err} </pre>"
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=8000, debug=True)
